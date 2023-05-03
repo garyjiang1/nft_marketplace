@@ -1,8 +1,22 @@
 import { useState } from 'react'
 import { ethers } from "ethers"
 import { Row, Form, Button } from 'react-bootstrap'
-import { create as ipfsHttpClient } from 'ipfs-http-client'
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
+import { Buffer } from 'buffer';
+
+const ipfsClient = require('ipfs-http-client');
+const projectId = '2OxuC5YZ5HSCsp97xQrkWl1XFtP';
+const projectSecret = '010969fa0d4855f265eb027c14837cfb';
+const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+
+const client = ipfsClient.create({
+  host: 'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https',
+  apiPath: '/api/v0',
+  headers: {
+    authorization: auth,
+  },
+});
 
 const Create = ({ marketplace, nft }) => {
   const [image, setImage] = useState('')
