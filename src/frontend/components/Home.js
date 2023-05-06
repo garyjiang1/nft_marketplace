@@ -17,6 +17,8 @@ const Home = ({ marketplace, nft }) => {
         const hash = fullUri.replace('http://localhost:3001/ipfs/', '')
         // use uri to fetch the nft metadata stored on ipfs 
         const response = await fetch(`http://localhost:3001/ipfs/${hash}`)
+        // log response
+        console.log('IPFS response:', response);
         const metadata = await response.json()
         // get total price of item (item price + fee)
         const totalPrice = await marketplace.getTotalPrice(item.itemId)
