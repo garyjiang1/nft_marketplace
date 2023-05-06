@@ -2,16 +2,11 @@ import {
     Link
 } from "react-router-dom";
 import { Navbar, Nav, Button, Container } from 'react-bootstrap'
-// import market from './market.png'
 
 const Navigation = ({ web3Handler, account }) => {
     return (
         <Navbar expand="lg" bg="secondary" variant="dark">
             <Container>
-                {/* <Navbar.Brand href="http://www.dappuniversity.com/bootcamp">
-                    <img src={market} width="40" height="40" className="" alt="" />
-                    &nbsp; DApp NFT Marketplace
-                </Navbar.Brand> */}
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
@@ -33,7 +28,11 @@ const Navigation = ({ web3Handler, account }) => {
 
                             </Nav.Link>
                         ) : (
-                            <Button onClick={web3Handler} variant="outline-light">Connect Wallet</Button>
+                            <div className="flex relative">
+                                <li className="bg-[#2952e3] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#2546bd]">
+                                    <Button onClick={web3Handler} >Connect Wallet</Button>
+                                </li>
+                            </div>
                         )}
                     </Nav>
                 </Navbar.Collapse>

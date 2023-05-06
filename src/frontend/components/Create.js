@@ -1,21 +1,14 @@
 import { useState } from 'react'
 import { ethers } from "ethers"
 import { Row, Form, Button } from 'react-bootstrap'
-import { Buffer } from 'buffer';
 
 const ipfsClient = require('ipfs-http-client');
-const projectId = '2OxuC5YZ5HSCsp97xQrkWl1XFtP';
-const projectSecret = '010969fa0d4855f265eb027c14837cfb';
-const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
 
 const client = ipfsClient.create({
-  host: 'ipfs.infura.io',
-  port: 5001,
-  protocol: 'https',
+  host: 'localhost',
+  port: 3001,
+  protocol: 'http',
   apiPath: '/api/v0',
-  headers: {
-    authorization: auth,
-  },
 });
 
 const Create = ({ marketplace, nft }) => {
@@ -30,9 +23,10 @@ const Create = ({ marketplace, nft }) => {
       try {
         const result = await client.add(file)
         console.log(result)
-        setImage(`https://ipfs.infura.io/ipfs/${result.path}`)
-      } catch (error){
+        setImage(`http://localhost:3001/ipfs/${result.path}`)
+      } catch (error) {
         console.log("ipfs image upload error: ", error)
+        alert(`Failed to upload IPFS image: ${error}`)
       }
     }
   }
@@ -43,10 +37,11 @@ const Create = ({ marketplace, nft }) => {
       mintThenList(result)
     } catch(error) {
       console.log("ipfs uri upload error: ", error)
+      alert(`Failed to create NFT: ${error}`)
     }
   }
   const mintThenList = async (result) => {
-    const uri = `https://ipfs.infura.io/ipfs/${result.path}`
+    const uri = `http://localhost:3001/ipfs/${result.path}`
     // mint nft 
     await(await nft.mint(uri)).wait()
     // get tokenId of new nft 
