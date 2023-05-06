@@ -16,7 +16,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
       // get uri url from nft contract
       const uri = await nft.tokenURI(i.tokenId)
       // use uri to fetch the nft metadata stored on ipfs 
-      const response = await fetch(uri)
+      const response = await fetch(uri.replace('https://ipfs.io', 'http://localhost:3001'))
       const metadata = await response.json()
       // get total price of item (item price + fee)
       const totalPrice = await marketplace.getTotalPrice(i.itemId)
