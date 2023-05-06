@@ -37,7 +37,7 @@
 ### 6. Run Tests
 `npx hardhat test`
 
-### 7. Run Tests
+### 7. Run Server
 `node proxy-server.js`
 
 ### 8. Launch Frontend
