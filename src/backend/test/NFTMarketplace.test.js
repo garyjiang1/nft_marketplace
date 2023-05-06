@@ -164,4 +164,49 @@ describe("NFTMarketplace", function () {
       ).to.be.revertedWith("item already sold");
     });
   })
+
+  describe("Removing marketplace items", function () {
+    let price = 1
+
+    beforeEach(async function () {
+      // addr1 mints an nft
+      await nft.connect(addr1).mint(URI)
+      // addr1 approves marketplace to spend nft
+      await nft.connect(addr1).setApprovalForAll(marketplace.address, true)
+      // addr1 makes their nft a marketplace item.
+      await marketplace.connect(addr1).makeItem(nft.address, 1 , toWei(price))
+    })
+
+    it("Should remove item from sale, transfer NFT back to seller and emit RemovedFromSale event", async function () {
+      // addr1 removes their nft from sale
+      await expect(marketplace.connect(addr1).removeFromSale(1))
+        .to.emit(marketplace, "RemovedFromSale")
+        .withArgs(
+          1,
+          nft.address,
+          1,
+          addr1.address
+        )
+      // Owner of NFT should now be addr1 (the seller)
+      expect(await nft.ownerOf(1)).to.equal(addr1.address);
+      // Item should not be available for sale anymore
+      expect((await marketplace.items(1)).sold).to.equal(true)
+    });
+
+    it("Should fail if item is already sold or if called by someone other than the seller", async function () {
+      // addr2 tries to remove item 1 from sale
+      await expect(
+        marketplace.connect(addr2).removeFromSale(1)
+      ).to.be.revertedWith("Only the seller can remove the item from sale");
+
+      // addr1 sells their item to addr2
+      const totalPriceInWei = await marketplace.getTotalPrice(1);
+      await marketplace.connect(addr2).purchaseItem(1, {value: totalPriceInWei});
+
+      // addr1 tries to remove item 1 from sale after it has been sold
+      await expect(
+        marketplace.connect(addr1).removeFromSale(1)
+      ).to.be.revertedWith("Item already sold");
+    });
+  });
 })

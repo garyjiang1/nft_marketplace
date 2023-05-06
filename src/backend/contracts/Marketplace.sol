@@ -42,6 +42,13 @@ contract Marketplace is ReentrancyGuard {
         address indexed buyer
     );
 
+    event RemovedFromSale(
+        uint256 indexed itemId,
+        address indexed tokenAddress,
+        uint256 indexed tokenId,
+        address seller
+    );
+
     constructor(uint _feePercent) {
         feeAccount = payable(msg.sender);
         feePercent = _feePercent;
@@ -98,5 +105,19 @@ contract Marketplace is ReentrancyGuard {
     }
     function getTotalPrice(uint _itemId) view public returns(uint){
         return((items[_itemId].price*(100 + feePercent))/100);
+    }
+
+    function removeFromSale(uint256 itemId) external nonReentrant {
+        Item storage item = items[itemId];
+        require(item.seller == msg.sender, "Only the seller can remove the item from sale");
+        require(!item.sold, "Item already sold");
+
+        IERC721(item.nft).transferFrom(address(this), item.seller, item.tokenId);
+        address payable zeroAddress = payable(address(0));
+        item.seller = zeroAddress;
+        item.price = 0;
+        item.sold = true;
+
+        emit RemovedFromSale(itemId, address(item.nft), item.tokenId, msg.sender);
     }
 }
