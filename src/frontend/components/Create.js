@@ -24,8 +24,9 @@ const Create = ({ marketplace, nft }) => {
         const result = await client.add(file)
         console.log(result)
         setImage(`http://localhost:3001/ipfs/${result.path}`)
-      } catch (error){
+      } catch (error) {
         console.log("ipfs image upload error: ", error)
+        alert(`Failed to upload IPFS image: ${error}`)
       }
     }
   }
@@ -36,6 +37,7 @@ const Create = ({ marketplace, nft }) => {
       mintThenList(result)
     } catch(error) {
       console.log("ipfs uri upload error: ", error)
+      alert(`Failed to create NFT: ${error}`)
     }
   }
   const mintThenList = async (result) => {
