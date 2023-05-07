@@ -23,6 +23,8 @@ function renderSoldItems(items) {
 }
 
 export default function MyListedItems({ marketplace, nft, account, signer }) {
+  // log singer
+  console.log("Signer:", signer);
   const [loading, setLoading] = useState(true)
   const [listedItems, setListedItems] = useState([])
   const [soldItems, setSoldItems] = useState([])
@@ -61,17 +63,19 @@ export default function MyListedItems({ marketplace, nft, account, signer }) {
   }
 
   const removeItemFromSale = async (itemId) => {
-    try {
-      console.log("Removing item", itemId);
-      const tx = await marketplace.connect(signer).removeNFTFromSale(itemId);
-      await tx.wait();
-      alert('Item removed from sale successfully.');
-      window.location.reload();
-    } catch (err) {
-      console.error("Failed to remove the item from sale:", err);
-      alert('Failed to remove the item from sale.');
-    }
-  };
+  try {
+    console.log("Removing item", itemId);
+    // inspecting singer
+    console.log("Signer:", signer);
+    const tx = await marketplace.connect(signer).removeFromSale(itemId);
+    await tx.wait();
+    alert('Item removed from sale successfully.');
+    window.location.reload();
+  } catch (err) {
+    console.error("Failed to remove the item from sale:", err);
+    alert('Failed to remove the item from sale.');
+  }
+};
   
 
   useEffect(() => {
