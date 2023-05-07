@@ -5,8 +5,9 @@ import { Navbar, Nav, Button, Container } from 'react-bootstrap'
 
 const Navigation = ({ web3Handler, account }) => {
     return (
-        <Navbar expand="lg" bg="secondary" variant="dark">
+        <Navbar expand="lg" bg="dark" variant="dark">
             <Container>
+                <Navbar.Brand href="#">NFT Marketplace</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
