@@ -29,24 +29,36 @@ describe("NFTMarketplace", function () {
 
   describe("Deployment", function () {
 
-    it("Should track name and symbol of the nft collection", async function () {
-      // This test expects the owner variable stored in the contract to be equal
-      // to our Signer's owner.
-      const nftName = "DApp NFT"
-      const nftSymbol = "DAPP"
+    it("Successful: Should track name and symbol of the nft collection", async function () {
+      const nftName = "DApp NFT";
+      const nftSymbol = "DAPP";
       expect(await nft.name()).to.equal(nftName);
       expect(await nft.symbol()).to.equal(nftSymbol);
     });
-
-    it("Should track feeAccount and feePercent of the marketplace", async function () {
+  
+    it("Unsuccessful: Should fail when the name or symbol of the nft collection is incorrect", async function () {
+      const incorrectNftName = "Wrong NFT Name";
+      const incorrectNftSymbol = "WRONG";
+      expect(await nft.name()).not.to.equal(incorrectNftName);
+      expect(await nft.symbol()).not.to.equal(incorrectNftSymbol);
+    });
+  
+    it("Successful: Should track feeAccount and feePercent of the marketplace", async function () {
       expect(await marketplace.feeAccount()).to.equal(deployer.address);
       expect(await marketplace.feePercent()).to.equal(feePercent);
     });
-  });
+  
+    it("Unsuccessful: Should fail when feeAccount or feePercent of the marketplace is incorrect", async function () {
+      const incorrectFeeAccount = addr1.address;
+      const incorrectFeePercent = 20;
+      expect(await marketplace.feeAccount()).not.to.equal(incorrectFeeAccount);
+      expect(await marketplace.feePercent()).not.to.equal(incorrectFeePercent);
+    });
+  });  
 
   describe("Creating new NFTs", function () {
 
-    it("Should track each minted NFT", async function () {
+    it("Successful: Should track each minted NFT", async function () {
       // addr1 mints an nft
       await nft.connect(addr1).mint(URI)
       expect(await nft.tokenCount()).to.equal(1);
@@ -58,7 +70,13 @@ describe("NFTMarketplace", function () {
       expect(await nft.balanceOf(addr2.address)).to.equal(1);
       expect(await nft.tokenURI(2)).to.equal(URI);
     });
-  })
+  
+    it("Unsuccessful: Should fail when trying to mint an NFT with an empty URI", async function () {
+      const emptyURI = "";
+      // Expect minting an NFT with an empty URI to be rejected
+      await expect(nft.connect(addr1).mint(emptyURI)).to.be.revertedWith("Invalid URI");
+    });
+  });
 
   describe("Listing NFTs for sale and transfer NFT ownerships:", function () {
     let price = 1
@@ -71,7 +89,7 @@ describe("NFTMarketplace", function () {
     })
 
 
-    it("Should track newly created item, transfer NFT from seller to marketplace and emit Offered event", async function () {
+    it("Successful: Should track newly created item, transfer NFT from seller to marketplace and emit Offered event", async function () {
       // addr1 offers their nft at a price of 1 ether
       await expect(marketplace.connect(addr1).makeItem(nft.address, 1 , toWei(price)))
         .to.emit(marketplace, "Offered")
@@ -95,7 +113,7 @@ describe("NFTMarketplace", function () {
       expect(item.sold).to.equal(false)
     });
 
-    it("Should fail if price is set to zero", async function () {
+    it("Unsuccessful: Should fail if price is set to zero", async function () {
       await expect(
         marketplace.connect(addr1).makeItem(nft.address, 1, 0)
       ).to.be.revertedWith("Price must be greater than zero");
@@ -177,7 +195,7 @@ describe("NFTMarketplace", function () {
       await marketplace.connect(addr1).makeItem(nft.address, 1 , toWei(price))
     })
 
-    it("Should remove item from sale, transfer NFT back to seller and emit RemovedFromSale event", async function () {
+    it("Successful: Should remove item from sale, transfer NFT back to seller and emit RemovedFromSale event", async function () {
       // addr1 removes their nft from sale
       await expect(marketplace.connect(addr1).removeFromSale(1))
         .to.emit(marketplace, "RemovedFromSale")
@@ -193,7 +211,7 @@ describe("NFTMarketplace", function () {
       expect((await marketplace.items(1)).sold).to.equal(true)
     });
 
-    it("Should fail if item is already sold or if called by someone other than the seller", async function () {
+    it("Unsuccessful: Should fail if item is already sold or if called by someone other than the seller", async function () {
       // addr2 tries to remove item 1 from sale
       await expect(
         marketplace.connect(addr2).removeFromSale(1)
