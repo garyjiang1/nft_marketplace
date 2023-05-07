@@ -31,7 +31,7 @@ const Navigation = ({ web3Handler, account }) => {
                         ) : (
                             <div className="flex relative">
                                 <li className="bg-[#2952e3] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#2546bd]">
-                                    <Button onClick={web3Handler} >Connect Wallet</Button>
+                                    <Button variant="outline-light" onClick={web3Handler} >Connect Wallet</Button>
                                 </li>
                             </div>
                         )}
