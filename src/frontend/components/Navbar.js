@@ -11,10 +11,10 @@ const Navigation = ({ web3Handler, account }) => {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link as={Link} to="/">Home</Nav.Link>
-                        <Nav.Link as={Link} to="/create">Create</Nav.Link>
-                        <Nav.Link as={Link} to="/my-listed-items">My Listed Items</Nav.Link>
-                        <Nav.Link as={Link} to="/my-purchases">My Purchases</Nav.Link>
+                        <Nav.Link as={Link} to="/">Market</Nav.Link>
+                        <Nav.Link as={Link} to="/create">Create NFT</Nav.Link>
+                        <Nav.Link as={Link} to="/my-listed-items">Listed NFT</Nav.Link>
+                        <Nav.Link as={Link} to="/my-purchases">Purchased NFT</Nav.Link>
                     </Nav>
                     <Nav>
                         {account ? (
@@ -31,7 +31,7 @@ const Navigation = ({ web3Handler, account }) => {
                         ) : (
                             <div className="flex relative">
                                 <li className="bg-[#2952e3] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#2546bd]">
-                                    <Button onClick={web3Handler} >Connect Wallet</Button>
+                                    <Button onClick={web3Handler} variant="outline-light" >Connect Wallet</Button>
                                 </li>
                             </div>
                         )}

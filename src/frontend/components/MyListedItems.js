@@ -114,7 +114,7 @@ export default function MyListedItems({ marketplace, nft, account, signer }) {
         </div>
       ) : (
         <main style={{ padding: '1rem 0' }}>
-          <h2>No listed assets</h2>
+          <h2>Welcome to NFT marketplace!</h2>
         </main>
       )}
     </div>
