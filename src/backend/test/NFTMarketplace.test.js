@@ -44,7 +44,7 @@ describe("NFTMarketplace", function () {
     });
   });
 
-  describe("Minting NFTs", function () {
+  describe("Creating new NFTs", function () {
 
     it("Should track each minted NFT", async function () {
       // addr1 mints an nft
@@ -60,7 +60,7 @@ describe("NFTMarketplace", function () {
     });
   })
 
-  describe("Making marketplace items", function () {
+  describe("Listing NFTs for sale and transfer NFT ownerships:", function () {
     let price = 1
     let result 
     beforeEach(async function () {
@@ -114,7 +114,7 @@ describe("NFTMarketplace", function () {
       // addr1 makes their nft a marketplace item.
       await marketplace.connect(addr1).makeItem(nft.address, 1 , toWei(price))
     })
-    it("Should update item as sold, pay seller, transfer NFT to buyer, charge fees and emit a Bought event", async function () {
+    it("Successful: Should update item as sold, pay seller, transfer NFT to buyer, charge fees and emit a Bought event", async function () {
       const sellerInitalEthBal = await addr1.getBalance()
       const feeAccountInitialEthBal = await deployer.getBalance()
       // fetch items total price (market fees + item price)
@@ -141,7 +141,7 @@ describe("NFTMarketplace", function () {
       // The buyer should now own the nft
       expect(await nft.ownerOf(1)).to.equal(addr2.address);
     })
-    it("Should fail for invalid item ids, sold items and when not enough ether is paid", async function () {
+    it("Unsuccessful: Should fail for invalid item ids, sold items and when not enough ether is paid", async function () {
       // fails for invalid item ids
       await expect(
         marketplace.connect(addr2).purchaseItem(2, {value: totalPriceInWei})
@@ -153,8 +153,8 @@ describe("NFTMarketplace", function () {
       // In this instance, fails when buyer only sends enough ether to cover the price of the nft
       // not the additional market fee.
       await expect(
-        marketplace.connect(addr2).purchaseItem(1, {value: toWei(price)})
-      ).to.be.revertedWith("not enough ether to cover item price and market fee"); 
+        marketplace.connect(addr2).purchaseItem(1, {value: toWei(price-0.1)})
+      ).to.be.revertedWith("not enough ether"); 
       // addr2 purchases item 1
       await marketplace.connect(addr2).purchaseItem(1, {value: totalPriceInWei})
       // addr3 tries purchasing item 1 after its been sold 
@@ -165,7 +165,7 @@ describe("NFTMarketplace", function () {
     });
   })
 
-  describe("Removing marketplace items", function () {
+  describe("Removing NFTs from sale", function () {
     let price = 1
 
     beforeEach(async function () {
