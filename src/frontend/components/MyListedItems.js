@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Card } from 'react-bootstrap'
+import { Row, Col, Card, Button } from 'react-bootstrap';
 
 function renderSoldItems(items) {
   return (
@@ -22,7 +22,9 @@ function renderSoldItems(items) {
   )
 }
 
-export default function MyListedItems({ marketplace, nft, account }) {
+export default function MyListedItems({ marketplace, nft, account, signer }) {
+  // log singer
+  console.log("Signer:", signer);
   const [loading, setLoading] = useState(true)
   const [listedItems, setListedItems] = useState([])
   const [soldItems, setSoldItems] = useState([])
@@ -59,6 +61,22 @@ export default function MyListedItems({ marketplace, nft, account }) {
     setListedItems(listedItems)
     setSoldItems(soldItems)
   }
+
+  const removeItemFromSale = async (itemId) => {
+  try {
+      console.log("Removing item", itemId);
+      // inspecting signer
+      console.log("Signer:", signer);
+      const tx = await marketplace.connect(signer).removeFromSale(itemId);
+      await tx.wait();
+      alert('Item removed from sale successfully.');
+    } catch (err) {
+      console.error("Failed to remove the item from sale:", err);
+      alert('Failed to remove the item from sale.');
+    }
+  };
+  
+
   useEffect(() => {
     loadListedItems()
   }, [])
@@ -69,26 +87,36 @@ export default function MyListedItems({ marketplace, nft, account }) {
   )
   return (
     <div className="flex justify-center">
-      {listedItems.length > 0 ?
+      {listedItems.length > 0 ? (
         <div className="px-5 py-3 container">
-            <h2>Listed</h2>
+          <h2>Listed</h2>
           <Row xs={1} md={2} lg={4} className="g-4 py-3">
             {listedItems.map((item, idx) => (
               <Col key={idx} className="overflow-hidden">
                 <Card>
                   <Card.Img variant="top" src={item.image} />
-                  <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
+                  <Card.Footer>
+                    {ethers.utils.formatEther(item.totalPrice)} ETH
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="float-end"
+                        onClick={() => removeItemFromSale(item.itemId)}
+                      >
+                        Remove
+                      </Button>
+                  </Card.Footer>
                 </Card>
               </Col>
             ))}
           </Row>
-            {soldItems.length > 0 && renderSoldItems(soldItems)}
+          {soldItems.length > 0 && renderSoldItems(soldItems)}
         </div>
-        : (
-          <main style={{ padding: "1rem 0" }}>
-            <h2>No listed assets</h2>
-          </main>
-        )}
+      ) : (
+        <main style={{ padding: '1rem 0' }}>
+          <h2>No listed assets</h2>
+        </main>
+      )}
     </div>
   );
 }
