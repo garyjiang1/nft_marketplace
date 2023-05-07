@@ -65,12 +65,11 @@ export default function MyListedItems({ marketplace, nft, account, signer }) {
   const removeItemFromSale = async (itemId) => {
   try {
       console.log("Removing item", itemId);
-      // inspecting singer
+      // inspecting signer
       console.log("Signer:", signer);
       const tx = await marketplace.connect(signer).removeFromSale(itemId);
       await tx.wait();
       alert('Item removed from sale successfully.');
-      window.location.reload();
     } catch (err) {
       console.error("Failed to remove the item from sale:", err);
       alert('Failed to remove the item from sale.');
