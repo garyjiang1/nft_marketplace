@@ -7,6 +7,7 @@ contract NFT is ERC721URIStorage {
     uint public tokenCount;
     constructor() ERC721("DApp NFT", "DAPP"){}
     function mint(string memory _tokenURI) external returns(uint) {
+        require(bytes(_tokenURI).length > 0, "Invalid URI");
         tokenCount ++;
         _safeMint(msg.sender, tokenCount);
         _setTokenURI(tokenCount, _tokenURI);
