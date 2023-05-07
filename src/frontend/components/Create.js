@@ -41,19 +41,25 @@ const Create = ({ marketplace, nft }) => {
     }
   }
   const mintThenList = async (result) => {
-    const uri = `http://localhost:3001/ipfs/${result.path}`
-    // mint nft 
-    await(await nft.mint(uri)).wait()
-    // get tokenId of new nft 
-    const id = await nft.tokenCount()
-    // approve marketplace to spend nft
-    await(await nft.setApprovalForAll(marketplace.address, true)).wait()
-    // add nft to marketplace
-    const listingPrice = ethers.utils.parseEther(price.toString())
-    await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
-    // add create alert
-    alert('NFT created and listed successfully!');
+    try {
+      const uri = `http://localhost:3001/ipfs/${result.path}`
+      // mint nft 
+      await (await nft.mint(uri)).wait()
+      // get tokenId of new nft 
+      const id = await nft.tokenCount()
+      // approve marketplace to spend nft
+      await (await nft.setApprovalForAll(marketplace.address, true)).wait()
+      // add nft to marketplace
+      const listingPrice = ethers.utils.parseEther(price.toString())
+      await (await marketplace.makeItem(nft.address, id, listingPrice)).wait()
+      // add create alert
+      alert('NFT created and listed successfully!');
+    } catch (error) {
+      console.log(`Failed to create and list NFT: ${error}`);
+      alert(`Failed to create and list NFT: ${error}`);
+    }
   }
+  
   return (
     <div className="container-fluid mt-5">
       <div className="row">
