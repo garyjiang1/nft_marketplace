@@ -5,8 +5,8 @@
 - Solidity (Writing Smart Contract)
 - Javascript (React & Testing)
 - [Ethers](https://docs.ethers.io/v5/) (Blockchain Interaction)
-- [Hardhat](https://hardhat.org/) (Development Framework)
-- [Ipfs](https://ipfs.io/) (Metadata storage)
+- [Hardhat](https://hardhat.org/) (Development/Testing Framework)
+- [IPFS](https://ipfs.io/) (Metadata storage)
 - [React routers](https://v5.reactrouter.com/) (Navigational components)
 
 ## Requirements For Initial Setup
@@ -26,11 +26,22 @@
 
 `npx hardhat node`
 
-### 4. Connect development blockchain accounts to Metamask
+### 4. Connect Development Blockchain Accounts to MetaMask
 
-- Copy private key of the addresses and import to Metamask
-- Connect your metamask to hardhat blockchain, network 127.0.0.1:8545.
-- If you have not added hardhat to the list of networks on your metamask, open up a browser, click the fox icon, then click the top center dropdown button that lists all the available networks then click add networks. A form should pop up. For the "Network Name" field enter "Hardhat". For the "New RPC URL" field enter "http://127.0.0.1:8545". For the chain ID enter "31337". Then click save.  
+1. **Copy the private key** of the addresses you want to import into MetaMask.
+2. **Connect your MetaMask to the Hardhat blockchain** by selecting the network at 127.0.0.1:8545.
+
+#### If you haven't added the Hardhat network to your MetaMask:
+
+1. Open your preferred web browser and click on the MetaMask icon.
+2. Click on the top-center dropdown button to display the list of available networks.
+3. Click on "Add Network" at the bottom of the list to open the "Add Network" form.
+4. Fill in the form with the following details:
+   - Network Name: Enter "Hardhat".
+   - New RPC URL: Enter "http://127.0.0.1:8545".
+   - Chain ID: Enter "31337".
+5. Click on the "Save" button to add the Hardhat network to your MetaMask.
+
 
 ### 5. Migrate Smart Contracts
 
